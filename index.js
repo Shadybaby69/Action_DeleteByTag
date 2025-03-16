@@ -1,3 +1,5 @@
+// require @actions/core
+// require @actions/github
 const core = require('@actions/core');
 const { context} = require('@actions/github');
 const github = require('@actions/github');
@@ -6,6 +8,7 @@ const github = require('@actions/github');
     try {
         core.info("Action started!")
         // Get authenticated GitHub client (Ocktokit): https://github.com/actions/toolkit/tree/master/packages/github#usage
+        // require @actions/github
         const octokit = github.getOctokit(process.env.GITHUB_TOKEN)
         core.info("Authenticated")
 
