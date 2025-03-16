@@ -6,7 +6,7 @@ const fs = require('fs');
 (async () => {
     try {
         // Get authenticated GitHub client (Ocktokit): https://github.com/actions/toolkit/tree/master/packages/github#usage
-        const github = new github(process.env.GITHUB_TOKEN)
+        const gh = new github(process.env.GITHUB_TOKEN)
 
         // Get owner and repo from context of payload that triggered the action
         const { owner: currentOwner, repo: currentRepo } = context.repo
@@ -17,7 +17,7 @@ const fs = require('fs');
         const assetTag = core.getInput('asset_tag', { required: false } || 'Latest')
 
         // Getting the uploadUrl of the Release with the Latest tag
-        const releaseIdResponse = await github.repos.getReleaseByTag({
+        const releaseIdResponse = await gh.repos.getReleaseByTag({
             owner: assetOwner,
             repo: assetRepo,
             tag: assetTag
@@ -27,7 +27,7 @@ const fs = require('fs');
         core.info(`Id of the Repo with tag: ${assetTag} is ${releaseId}`)
 
         //Getting all release assets
-        const releaseAssetsResponse = await github.repos.listReleaseAssets({
+        const releaseAssetsResponse = await gh.repos.listReleaseAssets({
             owner: assetOwner,
             repo: assetRepo,
             release_id: releaseId
@@ -36,7 +36,7 @@ const fs = require('fs');
         // Deleting all Assets from specified tag
         const releaseAsset = releaseAssetsResponse.data
         releaseAsset.forEach((assetId) => {
-            github.repos
+            gh.repos
                 .deleteReleaseAsset({
                     owner: assetOwner,
                     repo: assetRepo,
