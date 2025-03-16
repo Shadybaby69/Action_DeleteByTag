@@ -1,11 +1,12 @@
 const core = require('@actions/core');
 const { context} = require('@actions/github');
-const github =  require('@actions/github');
+const github = require('@actions/github');
 
 (async () => {
     try {
         // Get authenticated GitHub client (Ocktokit): https://github.com/actions/toolkit/tree/master/packages/github#usage
-        let gh = github.getOctokit(process.env.GITHUB_TOKEN)
+        const octokit = github.getOctokit(process.env.GITHUB_TOKEN)
+
 
         // Get owner and repo from context of payload that triggered the action
         const { owner: currentOwner, repo: currentRepo } = context.repo
@@ -15,8 +16,11 @@ const github =  require('@actions/github');
         const assetRepo = core.getInput('repo', { required: false }) || currentRepo
         const assetTag = core.getInput('asset_tag', { required: false } || 'Latest')
 
+        await octokit.repos.deleteReleaseAsset(
+
+        )
         // Getting the uploadUrl of the Release with the Latest tag
-        const releaseIdResponse = await gh.repos.getReleaseByTag({
+        const releaseIdResponse = await octokit.repos.getReleaseByTag({
             owner: assetOwner,
             repo: assetRepo,
             tag: assetTag
@@ -26,7 +30,7 @@ const github =  require('@actions/github');
         core.info(`Id of the Repo with tag: ${assetTag} is ${releaseId}`)
 
         //Getting all release assets
-        const releaseAssetsResponse = await gh.repos.listReleaseAssets({
+        const releaseAssetsResponse = await octokit.repos.listReleaseAssets({
             owner: assetOwner,
             repo: assetRepo,
             release_id: releaseId
@@ -35,7 +39,7 @@ const github =  require('@actions/github');
         // Deleting all Assets from specified tag
         const releaseAsset = releaseAssetsResponse.data
         releaseAsset.forEach((assetId) => {
-            gh.repos
+            octokit.repos
                 .deleteReleaseAsset({
                     owner: assetOwner,
                     repo: assetRepo,
