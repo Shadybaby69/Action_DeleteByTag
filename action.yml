@@ -23,7 +23,7 @@ outputs:
       'The URL users can navigate to in order to download the uploaded asset'
 runs:
   using: 'node20'
-  main: 'index.js'
+  main: 'dist/index.js'
 branding:
   icon: 'download'
   color: 'blue'
