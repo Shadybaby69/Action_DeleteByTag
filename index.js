@@ -25,7 +25,7 @@ const github = require('@actions/github');
             tag: assetTag
         })
         // The releaseId with specified tag
-        const releaseId = releaseIdResponse.data
+        const releaseId = releaseIdResponse.data.id
         core.info(`Id of the Repo with tag: ${assetTag} is ${releaseId}`)
 
         //Getting all release assets
@@ -37,15 +37,15 @@ const github = require('@actions/github');
 
         // Deleting all Assets from specified tag
         const releaseAsset = releaseAssetsResponse.data
-        releaseAsset.forEach((assetId) => {
+        releaseAsset.forEach((asset) => {
             octokit.repos
                 .deleteReleaseAsset({
                     owner: assetOwner,
                     repo: assetRepo,
-                    asset_id: assetId
+                    asset_id: asset.id
                 })
                 .then()
-            core.info(`- Deleting asset with id: ${assetId}`)
+            core.info(`- Deleting asset with id: ${asset.id}`)
         })
 
         core.info("The action was successfully executed!");
