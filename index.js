@@ -4,8 +4,10 @@ const github = require('@actions/github');
 
 (async () => {
     try {
+        core.info("Action started!")
         // Get authenticated GitHub client (Ocktokit): https://github.com/actions/toolkit/tree/master/packages/github#usage
         const octokit = github.getOctokit(process.env.GITHUB_TOKEN)
+        core.info("Authenticated")
 
 
         // Get owner and repo from context of payload that triggered the action
@@ -16,9 +18,6 @@ const github = require('@actions/github');
         const assetRepo = core.getInput('repo', { required: false }) || currentRepo
         const assetTag = core.getInput('asset_tag', { required: false } || 'Latest')
 
-        await octokit.repos.deleteReleaseAsset(
-
-        )
         // Getting the uploadUrl of the Release with the Latest tag
         const releaseIdResponse = await octokit.repos.getReleaseByTag({
             owner: assetOwner,
